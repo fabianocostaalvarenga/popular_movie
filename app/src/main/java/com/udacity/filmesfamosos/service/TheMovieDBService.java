@@ -1,6 +1,7 @@
 package com.udacity.filmesfamosos.service;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
@@ -44,23 +45,20 @@ public class TheMovieDBService {
     private static Picasso picasso;
     private static RequestCreator requestCreator;
 
-    private static final String API_KEY =
-            "YOUR_API_KEY_HERE";
-
     private static final String API_THEMOVIEDB_BASE_URL =
             "https://api.themoviedb.org/3/movie";
 
     private static final String API_TMDB_BASE_URL =
             "https://image.tmdb.org/t/p/w342";
 
-    public static List<PopularMovieDTO> listMoviesBy() {
-        return listMoviesBy(null);
+    public static List<PopularMovieDTO> listMoviesBy(String apiKey) {
+        return listMoviesBy(null, apiKey);
     }
 
-    public static List<PopularMovieDTO> listMoviesBy(FilterEnum filterEnum) {
+    public static List<PopularMovieDTO> listMoviesBy(FilterEnum filterEnum, String apiKey) {
 
         Map<String, String> queryParameter = new HashMap<>();
-        queryParameter.put("api_key", API_KEY);
+        queryParameter.put("api_key", apiKey);
 
         URL url = NetWorkUtils.makeUrl(API_THEMOVIEDB_BASE_URL, filterEnum.getFilter(), queryParameter);
         InputStream inputStream = NetWorkUtils.requestMovies(url);

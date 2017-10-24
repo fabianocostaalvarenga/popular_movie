@@ -3,6 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
+
+    /*def Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+    resValue "string", "apiKey", properties.getProperty("apiKey", "")*/
+
     defaultConfig {
         applicationId "com.udacity.filmesfamosos"
         minSdkVersion 15
@@ -10,6 +15,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        resValue "string", "apiKey", System.getenv("THEMOVIESDB_API_KEY")
+
     }
     buildTypes {
         release {

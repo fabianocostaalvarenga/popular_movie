@@ -17,6 +17,8 @@ import com.udacity.filmesfamosos.tasks.ListThumbnailAsyncTaskExecutor;
 
 public class PrincipalActivity extends AppCompatActivity {
 
+    private static final String TAG = "PrincipalActivity";
+
     private GridView gridView;
 
     @Override

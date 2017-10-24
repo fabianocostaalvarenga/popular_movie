@@ -11,6 +11,7 @@ import com.udacity.filmesfamosos.Adapter.ImageAdapter;
 import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
+import com.udacity.filmesfamosos.utils.ApplicationUtils;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class ListThumbnailAsyncTaskExecutor extends AsyncTask<Void, Integer, Lis
     private GridView view;
     private FilterEnum filterEnum;
     private ConnectivityManager connectivityManager;
+    private static final String METADATA_API_KEY = "com.themoviesdb.api.key";
+    private String apiKey;
 
     public ListThumbnailAsyncTaskExecutor(Context context, GridView view, FilterEnum filterEnum, ConnectivityManager connectivityManager) {
         this.context = context;
@@ -45,9 +48,12 @@ public class ListThumbnailAsyncTaskExecutor extends AsyncTask<Void, Integer, Lis
 
     @Override
     protected List<PopularMovieDTO> doInBackground(Void... voids) {
+
+        apiKey = ApplicationUtils.getMetaDataValue(context, METADATA_API_KEY);
+
         List<PopularMovieDTO> result = null;
         if(NetWorkUtils.isOnline(connectivityManager)) {
-            result = TheMovieDBService.listMoviesBy(filterEnum);
+            result = TheMovieDBService.listMoviesBy(filterEnum, apiKey);
         } else {
             result = new ArrayList<>();
         }

@@ -64,8 +64,9 @@ public class NetWorkUtils {
         return inputStream;
     }
 
-    public static Boolean isOnline(ConnectivityManager connectivityManager) {
-        ConnectivityManager cm = connectivityManager;
+    public static Boolean isOnline(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }

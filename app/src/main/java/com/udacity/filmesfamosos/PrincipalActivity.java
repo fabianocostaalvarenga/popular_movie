@@ -1,19 +1,20 @@
 package com.udacity.filmesfamosos;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.tasks.ListThumbnailAsyncTaskExecutor;
+import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
 public class PrincipalActivity extends AppCompatActivity {
 
@@ -66,7 +67,19 @@ public class PrincipalActivity extends AppCompatActivity {
     }
 
     private void executeRequest(final FilterEnum filterEnum) {
-        new ListThumbnailAsyncTaskExecutor(PrincipalActivity.this, gridView, filterEnum,
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).execute();
+        if(NetWorkUtils.isOnline(this)) {
+            new ListThumbnailAsyncTaskExecutor(PrincipalActivity.this, gridView, filterEnum).execute();
+        } else {
+            View view = findViewById(R.id.activity_principal);
+            Snackbar snackbar =
+                    Snackbar.make(view, getString(R.string.no_internet_connection), Snackbar.LENGTH_LONG);
+            snackbar.setAction(getString(R.string.label_retry), new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    executeRequest(filterEnum);
+                }
+            });
+            snackbar.show();
+        }
     }
 }

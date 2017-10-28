@@ -36,7 +36,7 @@ public class DetailMovieActivity extends AppCompatActivity {
         Intent intent = this.getIntent();
 
         if(null != intent.getExtras()) {
-            popularMovieDTO = (PopularMovieDTO) intent.getExtras().get("popularMovieDTO");
+            popularMovieDTO = (PopularMovieDTO) intent.getExtras().get(PopularMovieDTO.POPULAR_MOVIE_DTO);
             setComponentsValues(popularMovieDTO);
         }
 

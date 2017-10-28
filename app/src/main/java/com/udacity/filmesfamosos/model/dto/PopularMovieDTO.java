@@ -17,6 +17,8 @@ import java.util.List;
 
 public class PopularMovieDTO implements Serializable {
 
+    public static final String POPULAR_MOVIE_DTO = "popularMovieDTO";
+
     private Boolean adult;
 
     @SerializedName("backdrop_path")

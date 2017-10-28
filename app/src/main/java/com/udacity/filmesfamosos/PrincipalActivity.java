@@ -66,7 +66,7 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
 
     private void openDetailView(PopularMovieDTO popularMovieDTO) {
         Intent intent = new Intent(PrincipalActivity.this, DetailMovieActivity.class);
-        intent.putExtra("popularMovieDTO", popularMovieDTO);
+        intent.putExtra(PopularMovieDTO.POPULAR_MOVIE_DTO, popularMovieDTO);
         startActivity(intent);
     }
 

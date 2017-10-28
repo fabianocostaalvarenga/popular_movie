@@ -1,14 +1,11 @@
 package com.udacity.filmesfamosos.service;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.udacity.filmesfamosos.R;
@@ -40,10 +37,6 @@ import java.util.Map;
 public class TheMovieDBService {
 
     private static final String TAG = "TheMovieDBConsumer";
-
-    private static okhttp3.OkHttpClient okHttp3Client;
-    private static Picasso picasso;
-    private static RequestCreator requestCreator;
 
     private static final String API_THEMOVIEDB_BASE_URL =
             "https://api.themoviedb.org/3/movie";
@@ -117,26 +110,13 @@ public class TheMovieDBService {
     }
 
     public static void processImage(Context context, PopularMovieDTO popularMovieDTO, ImageView imageView) {
-
-        okHttp3Client = new okhttp3.OkHttpClient();
-        picasso = new Picasso.Builder(context)
-                .downloader(new OkHttp3Downloader(okHttp3Client)).listener(new Picasso.Listener() {
-                    @Override
-                    public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                        exception.printStackTrace();
-                    }
-                }).build();
-
         URL url = getUrlForThumbnail(popularMovieDTO);
-
         try {
-            requestCreator = picasso.load(String.valueOf(url.toURI()));
+            RequestCreator requestCreator = Picasso.with().load(String.valueOf(url.toURI()));
+            requestCreator.error(R.mipmap.ic_launcher_round).into(imageView);
         } catch (URISyntaxException e) {
             Log.e(TAG, "Load image from url failed... {"+url.toString()+"}");
             e.printStackTrace();
         }
-
-        requestCreator.error(R.mipmap.ic_launcher_round).into(imageView);
-
     }
 }

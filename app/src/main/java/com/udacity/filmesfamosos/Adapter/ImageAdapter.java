@@ -74,12 +74,18 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return popularMovieDTOs.size();
+        if(null != popularMovieDTOs) {
+            return popularMovieDTOs.size();
+        }
+        return 0;
     }
 
     @Override
     public Object getItem(int i) {
-        return popularMovieDTOs.get(i);
+        if(null != popularMovieDTOs) {
+            return popularMovieDTOs.get(i);
+        }
+        return null;
     }
 
     @Override

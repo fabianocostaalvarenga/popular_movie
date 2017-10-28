@@ -1,11 +1,9 @@
 package com.udacity.filmesfamosos.tasks;
 
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.GridView;
 
-import com.udacity.filmesfamosos.Adapter.ImageAdapter;
 import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
@@ -17,49 +15,40 @@ import java.util.List;
  * Created by fabiano.alvarenga on 10/22/17.
  */
 
-public class ListThumbnailAsyncTaskExecutor extends AsyncTask<Void, Integer, List<PopularMovieDTO>> {
+public class ListThumbnailAsyncTaskExecutor
+        extends AsyncTask<FilterEnum, Integer, List<PopularMovieDTO>> {
 
-    private ProgressDialog progressDialog = null;
     private Context context;
-    private GridView view;
-    private FilterEnum filterEnum;
     private static final String METADATA_API_KEY = "com.themoviesdb.api.key";
     private String apiKey;
 
-    public ListThumbnailAsyncTaskExecutor(Context context, GridView view, FilterEnum filterEnum) {
-        this.context = context;
-        this.view = view;
-        this.filterEnum = filterEnum;
+    private AsyncTaskDelegate delegate = null;
+
+    public ListThumbnailAsyncTaskExecutor(AsyncTaskDelegate responder) {
+        this.context =  ((Activity)responder).getApplicationContext();
+        this.delegate = responder;
     }
 
     @Override
     protected void onPreExecute() {
-        if(progressDialog != null) {
-            progressDialog.cancel();
+        if(null != delegate) {
+            delegate.processStart();
         }
-        progressDialog = ProgressDialog.show(context, "", "Please wait...", true, true);
     }
 
     @Override
-    protected List<PopularMovieDTO> doInBackground(Void... voids) {
-
+    protected List<PopularMovieDTO> doInBackground(FilterEnum... filterEnum) {
         apiKey = ApplicationUtils.getMetaDataValue(context, METADATA_API_KEY);
-
-        List<PopularMovieDTO> result = TheMovieDBService.listMoviesBy(filterEnum, apiKey);
-
+        List<PopularMovieDTO> result = TheMovieDBService.listMoviesBy(filterEnum[0], apiKey);
         return result;
     }
 
     @Override
     protected void onPostExecute(List<PopularMovieDTO> popularMovieDTOs) {
-        view.setAdapter(new ImageAdapter(context, popularMovieDTOs));
-
-        if(progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
-
         super.onPostExecute(popularMovieDTOs);
+        if(null != delegate) {
+            delegate.processFinish(popularMovieDTOs);
+        }
     }
 
 }

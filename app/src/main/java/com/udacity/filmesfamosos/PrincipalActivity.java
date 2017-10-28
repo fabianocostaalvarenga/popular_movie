@@ -1,5 +1,6 @@
 package com.udacity.filmesfamosos;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -9,18 +10,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
+import com.udacity.filmesfamosos.Adapter.ImageAdapter;
 import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
+import com.udacity.filmesfamosos.tasks.AsyncTaskDelegate;
 import com.udacity.filmesfamosos.tasks.ListThumbnailAsyncTaskExecutor;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
-public class PrincipalActivity extends AppCompatActivity {
+import java.util.List;
 
-    private static final String TAG = "PrincipalActivity";
+public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDelegate<List<PopularMovieDTO>> {
 
     private GridView gridView;
+    private FilterEnum filterEnum;
+    private ProgressDialog progressDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +72,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
     private void executeRequest(final FilterEnum filterEnum) {
         if(NetWorkUtils.isOnline(this)) {
-            new ListThumbnailAsyncTaskExecutor(PrincipalActivity.this, gridView, filterEnum).execute();
+            new ListThumbnailAsyncTaskExecutor(this).execute(filterEnum);
         } else {
             View view = findViewById(R.id.activity_principal);
             Snackbar snackbar =
@@ -82,4 +86,27 @@ public class PrincipalActivity extends AppCompatActivity {
             snackbar.show();
         }
     }
+
+    @Override
+    public void processStart() {
+
+        if(progressDialog != null) {
+            progressDialog.cancel();
+        }
+
+        progressDialog = ProgressDialog.show(this, "", getString(R.string.please_wait), true, true);
+    }
+
+    @Override
+    public void processFinish(List<PopularMovieDTO> object) {
+
+        gridView.setAdapter(new ImageAdapter(this, object));
+
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+
+    }
+
 }

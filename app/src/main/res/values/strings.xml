@@ -3,12 +3,9 @@
 
     <string name="item_menu_popular_movie">Popular Movies</string>
     <string name="item_menu_top_rated">Top Rated</string>
-
     <string name="activity_title_detail">Details Movie</string>
-
     <string name="bt_mark_favorite">MARK AS FAVORITE</string>
-
     <string name="no_internet_connection">Internet connection not available.</string>
-
     <string name="label_retry">Retry</string>
+    <string name="please_wait">Please wait...</string>
 </resources>

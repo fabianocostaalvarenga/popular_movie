@@ -1,142 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context="com.udacity.filmesfamosos.DetailMovieActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_gravity="top"
-            android:weightSum="100">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="30"
+            <ImageView
+                android:id="@+id/imageViewDetailHeader"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:background="@color/colorHeadDetailActivity"
-                android:orientation="horizontal"
-                android:tileMode="repeat">
+                app:layout_constraintBottom_toBottomOf="@+id/tv_originalTitle"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/shape_rectangle_fill_light" />
 
-                <TextView
-                    android:id="@+id/tv_originalTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:textColor="@color/colorTitleDetailActivity"
-                    android:textSize="40sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_originalTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/colorTitleDetailActivity"
+                android:textSize="36sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Batman v Superman: Dawn of Justice"
+                android:layout_marginStart="8dp" />
 
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/imv_poster"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_originalTitle"
+                app:srcCompat="@drawable/shape_rectangle_fill_light" />
 
-            <LinearLayout
-                android:id="@+id/ln_layout1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:tileMode="repeat"
-                android:textAlignment="center">
+            <Button
+                android:id="@+id/bt_favorite"
+                android:layout_width="90dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="32dp"
+                android:background="@color/colorButtonFavorite"
+                android:text="@string/bt_mark_favorite"
+                android:textColor="@color/colorDetailInfo"
+                app:layout_constraintBottom_toBottomOf="@+id/imv_poster"
+                app:layout_constraintLeft_toRightOf="@+id/imv_poster"
+                android:layout_marginStart="32dp" />
 
-                <ImageView
-                    android:id="@+id/imv_poster"
-                    android:layout_width="180dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="6dp" />
+            <TextView
+                android:id="@+id/tv_releaseDate"
+                android:layout_width="94dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="16dp"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="@+id/bt_favorite"
+                app:layout_constraintTop_toTopOf="@+id/imv_poster"
+                tools:text="2016" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/tv_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="64dp"
+                android:layout_marginTop="8dp"
+                android:textSize="24sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintBottom_toTopOf="@+id/bt_favorite"
+                app:layout_constraintLeft_toLeftOf="@+id/bt_favorite"
+                app:layout_constraintTop_toBottomOf="@+id/tv_releaseDate"
+                tools:text="N/I" />
 
-                    <TextView
-                        android:id="@+id/tv_releaseDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="40dp"
-                        android:paddingTop="20dp"
-                        android:textColor="@color/colorDetailInfo"
-                        android:textSize="40sp"
-                        android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_vote_average"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/bt_favorite"
+                app:layout_constraintLeft_toLeftOf="@+id/bt_favorite"
+                app:layout_constraintTop_toBottomOf="@+id/tv_duration"
+                tools:text="5.7" />
 
-                    <TextView
-                        android:id="@+id/tv_duration"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_releaseDate"
-                        android:paddingLeft="40dp"
-                        android:paddingTop="10dp"
-                        android:textColor="@color/colorDetailInfo"
-                        android:textSize="30sp"
-                        android:textStyle="italic|bold" />
+            <TextView
+                android:id="@+id/tv_overview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imv_poster"
+                tools:text="Fearing the actions of a god-like Super Hero left unchecked, Gotham City`s own formidable, forceful vigilante takes on Metropolis`s most revered, modern-day savior, while the world wrestles with what sort of hero it really needs."
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
 
-                    <TextView
-                        android:id="@+id/tv_vote_average"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_duration"
-                        android:paddingLeft="40dp"
-                        android:paddingTop="20dp"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/bt_favorite"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_vote_average"
-                        android:layout_marginLeft="40dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@color/colorButtonFavorite"
-                        android:text="@string/bt_mark_favorite"
-                        android:textColor="@color/colorDetailInfo"
-                        android:textSize="15sp" />
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="40"
-                android:orientation="horizontal"
-                android:textAlignment="center"
-                android:tileMode="repeat">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/tv_overview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="5dp"
-                        android:paddingTop="18dp"
-                        android:textColor="@color/colorDetailInfo"
-                        android:textSize="18sp" />
-
-                    <View
-                        android:id="@+id/splitLine"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_below="@+id/tv_overview"
-                        android:layout_marginTop="4dp"
-                        android:background="@color/colorDetailInfo" />
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
     </ScrollView>
-</FrameLayout>
+</layout>

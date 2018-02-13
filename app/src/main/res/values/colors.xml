@@ -5,11 +5,11 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorHeadDetailActivity">#4DB6AC</color>
+    <color name="colorHeadDetailActivity">#4db6ac</color>
 
-    <color name="colorTitleDetailActivity">#FFFFFF</color>
+    <color name="colorTitleDetailActivity">#ffffff</color>
 
     <color name="colorDetailInfo">#9E9E9E</color>
 
-    <color name="colorButtonFavorite">#B2DFDB</color>
+    <color name="colorButtonFavorite">#b2dfdb</color>
 </resources>

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.udacity.filmesfamosos.R;
@@ -32,7 +31,6 @@ public class ImageAdapter extends BaseAdapter {
     private List<PopularMovieDTO> popularMovieDTOs;
     private static LayoutInflater inflater = null;
 
-    private okhttp3.OkHttpClient okHttp3Client;
     private Picasso picasso;
     private RequestCreator requestCreator;
 
@@ -41,15 +39,12 @@ public class ImageAdapter extends BaseAdapter {
         this.popularMovieDTOs = iImages;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        this.okHttp3Client = new okhttp3.OkHttpClient();
-        this.picasso = new Picasso.Builder(context)
-                .downloader(new OkHttp3Downloader(okHttp3Client)).listener(new Picasso.Listener() {
-                    @Override
-                    public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                        exception.printStackTrace();
-                    }
-                }).build();
-
+        this.picasso = new Picasso.Builder(context).listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                exception.printStackTrace();
+            }
+        }).build();
     }
 
     @Override

@@ -112,7 +112,7 @@ public class TheMovieDBService {
     public static void processImage(Context context, PopularMovieDTO popularMovieDTO, ImageView imageView) {
         URL url = getUrlForThumbnail(popularMovieDTO);
         try {
-            RequestCreator requestCreator = Picasso.with().load(String.valueOf(url.toURI()));
+            RequestCreator requestCreator = Picasso.with(context).load(String.valueOf(url.toURI()));
             requestCreator.error(R.mipmap.ic_launcher_round).into(imageView);
         } catch (URISyntaxException e) {
             Log.e(TAG, "Load image from url failed... {"+url.toString()+"}");

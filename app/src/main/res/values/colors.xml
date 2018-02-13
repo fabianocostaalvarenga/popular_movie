@@ -9,7 +9,7 @@
 
     <color name="colorTitleDetailActivity">#ffffff</color>
 
-    <color name="colorDetailInfo">#9E9E9E</color>
+    <color name="colorDetailInfo">#9e9e9e</color>
 
     <color name="colorButtonFavorite">#b2dfdb</color>
 </resources>

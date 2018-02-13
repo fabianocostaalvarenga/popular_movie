@@ -14,7 +14,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/imageViewDetailHeader"
+                android:id="@+id/iv_detail_header"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@color/colorHeadDetailActivity"
@@ -112,7 +112,7 @@
                 android:layout_marginEnd="8dp" />
 
             <ImageView
-                android:id="@+id/imageView7"
+                android:id="@+id/iv_line_divider"
                 android:layout_width="0dp"
                 android:layout_height="2dp"
                 android:layout_marginTop="8dp"
@@ -130,7 +130,7 @@
                 tools:text="@string/label_trailer"
                 android:textSize="24sp"
                 app:layout_constraintLeft_toLeftOf="@+id/tv_overview"
-                app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_line_divider" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

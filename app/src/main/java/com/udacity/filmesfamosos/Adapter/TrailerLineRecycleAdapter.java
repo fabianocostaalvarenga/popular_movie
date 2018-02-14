@@ -43,16 +43,20 @@ public class TrailerLineRecycleAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        TrailerViewHolder viewHolder = (TrailerViewHolder) holder;
+        if(null != trailerModels) {
 
-        TrailerModel trailerModel = trailerModels.get(position);
+            TrailerViewHolder viewHolder = (TrailerViewHolder) holder;
 
-        viewHolder.name.setText(trailerModel.getName());
+            TrailerModel trailerModel = trailerModels.get(position);
+
+            viewHolder.name.setText(trailerModel.getName());
+        }
 
     }
 
     @Override
     public int getItemCount() {
+        if(null == trailerModels) {return 0;}
         return trailerModels.size();
     }
 

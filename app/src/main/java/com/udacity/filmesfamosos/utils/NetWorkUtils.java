@@ -28,9 +28,7 @@ public class NetWorkUtils {
         try {
             Uri.Builder builder = Uri.parse(urlBase).buildUpon();
 
-            if(null != urlPath) {
-                builder.appendPath(urlPath.replace("/",""));
-            }
+            builder.appendEncodedPath(urlPath);
 
             if(null != queryParameter && queryParameter.size() > 0) {
                 for (Map.Entry<String, String> element : queryParameter.entrySet()) {

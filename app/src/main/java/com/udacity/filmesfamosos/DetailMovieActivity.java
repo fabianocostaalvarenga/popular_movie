@@ -1,17 +1,16 @@
 package com.udacity.filmesfamosos;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.udacity.filmesfamosos.Adapter.TrailerLineRecycleAdapter;
@@ -19,19 +18,21 @@ import com.udacity.filmesfamosos.databinding.ActivityDetailBinding;
 import com.udacity.filmesfamosos.model.TrailerModel;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
+import com.udacity.filmesfamosos.tasks.AsyncTaskDelegate;
+import com.udacity.filmesfamosos.tasks.ListTrailersAsyncTaskExecutor;
 import com.udacity.filmesfamosos.utils.DateUtils;
+import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by fabiano.alvarenga on 10/22/17.
  */
 
-public class DetailMovieActivity extends AppCompatActivity {
+public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskDelegate<List<TrailerModel>> {
 
     private PopularMovieDTO popularMovieDTO;
-
+    private ProgressDialog progressDialog = null;
     private Button btFavorite;
 
     private ActivityDetailBinding activityDetailBinding;
@@ -51,34 +52,7 @@ public class DetailMovieActivity extends AppCompatActivity {
             setComponentsValues(popularMovieDTO);
         }
 
-        List<TrailerModel> trailerModels = getTrailerModelsFakeData();
-
-        mountListTrailersItens(trailerModels);
-
-    }
-
-    @NonNull
-    private List<TrailerModel> getTrailerModelsFakeData() {
-        List<TrailerModel> trailerModels = new ArrayList<TrailerModel>();
-        trailerModels.add(
-                new TrailerModel("533ec654c3a36854480003eb", "en", "US", "SUXWAEX2jlg", "Batman v Superman: Dawn of Justice", "YouTube", 720, "Trailer")
-        );
-        trailerModels.add(
-                new TrailerModel("533ec654c3a36854480003ec", "en", "US", "SUXWAEX2jlh", "A Falha de San Andreas", "YouTube", 720, "Trailer")
-        );
-        trailerModels.add(
-                new TrailerModel("533ec654c3a36854480003ed", "en", "US", "SUXWAEX2jli", "O Espetacular Homem Aranha", "YouTube", 720, "Trailer")
-        );
-        trailerModels.add(
-                new TrailerModel("533ec654c3a36854480003ef", "en", "US", "SUXWAEX2jlj", "Batman v Superman: Dawn of Justice", "YouTube", 720, "Trailer")
-        );
-        trailerModels.add(
-                new TrailerModel("533ec654c3a36854480003eg", "en", "US", "SUXWAEX2jll", "A Falha de San Andreas", "YouTube", 720, "Trailer")
-        );
-        trailerModels.add(
-                new TrailerModel("533ec654c3a36854480003eh", "en", "US", "SUXWAEX2jlm", "O Espetacular Homem Aranha", "YouTube", 720, "Trailer")
-        );
-        return trailerModels;
+        executeRequest(popularMovieDTO);
     }
 
     private void mountListTrailersItens(List<TrailerModel> trailerModels) {
@@ -107,5 +81,42 @@ public class DetailMovieActivity extends AppCompatActivity {
 
         TheMovieDBService.processImage(this, popularMovieDTO, activityDetailBinding.imvPoster);
 
+    }
+
+    private void executeRequest(final PopularMovieDTO popularMovieDTO) {
+        if(NetWorkUtils.isOnline(this)) {
+            new ListTrailersAsyncTaskExecutor(this).execute(popularMovieDTO);
+        } else {
+            View view = findViewById(R.id.activity_detail);
+            Snackbar snackbar =
+                    Snackbar.make(view, getString(R.string.no_internet_connection), Snackbar.LENGTH_LONG);
+            snackbar.setAction(getString(R.string.label_retry), new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    executeRequest(popularMovieDTO);
+                }
+            });
+            snackbar.show();
+        }
+    }
+
+    @Override
+    public void processStart() {
+        if(progressDialog != null) {
+            progressDialog.cancel();
+        }
+
+        progressDialog = ProgressDialog.show(this, "", getString(R.string.please_wait), true, true);
+    }
+
+    @Override
+    public void processFinish(List<TrailerModel> trailerModels) {
+
+        mountListTrailersItens(trailerModels);
+
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 }

@@ -10,6 +10,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.udacity.filmesfamosos.R;
 import com.udacity.filmesfamosos.model.FilterEnum;
+import com.udacity.filmesfamosos.model.TrailerModel;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
@@ -25,7 +26,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +44,9 @@ public class TheMovieDBService {
     private static final String API_TMDB_BASE_URL =
             "https://image.tmdb.org/t/p/w342";
 
+    private static final String YOUTUBE_VIEW_URL =
+            "https://www.youtube.com/watch"; //?v=Wfql_DoHRKc
+
     public static List<PopularMovieDTO> listMoviesBy(String apiKey) {
         return listMoviesBy(null, apiKey);
     }
@@ -59,16 +62,16 @@ public class TheMovieDBService {
         return listPopularMovieDTO(inputStream);
     }
 
-    public static List<URL> getUrlForThumbnail(List<PopularMovieDTO> popularMovieDTOs) {
+    public static List<TrailerModel> listTrailersByMovie(PopularMovieDTO popularMovieDTO, String apiKey) {
 
-        List<URL> result = new ArrayList<>();
+        Map<String, String> queryParameter = new HashMap<>();
+        queryParameter.put("api_key", apiKey);
 
-        for (PopularMovieDTO item : popularMovieDTOs) {
-            URL url = NetWorkUtils.makeUrl(API_TMDB_BASE_URL, item.getPosterPath(), null);
-            result.add(url);
-        }
+        String urlPath = String.valueOf(popularMovieDTO.getId()) + "/videos";
+        URL url = NetWorkUtils.makeUrl(API_THEMOVIEDB_BASE_URL, urlPath, queryParameter);
+        InputStream inputStream = NetWorkUtils.requestMovies(url);
 
-        return result;
+        return listTrailersModel(inputStream);
     }
 
     public static URL getUrlForThumbnail(PopularMovieDTO popularMovieDTO) {
@@ -91,6 +94,40 @@ public class TheMovieDBService {
             JSONArray arr = jsonObject.getJSONArray("results");
 
             Type listType = new TypeToken<List<PopularMovieDTO>>() {}.getType();
+
+            result = new Gson().fromJson(String.valueOf(arr), listType);
+
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        }
+
+        return result;
+
+    }
+
+    private static List<TrailerModel> listTrailersModel(InputStream in) {
+        BufferedReader streamReader = null;
+        List<TrailerModel> result = null;
+        try {
+            streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            StringBuilder responseStrBuilder = new StringBuilder();
+
+            String inputStr;
+            while ((inputStr = streamReader.readLine()) != null)
+                responseStrBuilder.append(inputStr);
+
+            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
+
+            JSONArray arr = jsonObject.getJSONArray("results");
+
+            Type listType = new TypeToken<List<TrailerModel>>() {}.getType();
 
             result = new Gson().fromJson(String.valueOf(arr), listType);
 

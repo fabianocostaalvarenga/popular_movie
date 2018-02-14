@@ -23,7 +23,6 @@ import java.util.List;
 public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDelegate<List<PopularMovieDTO>> {
 
     private GridView gridView;
-    private FilterEnum filterEnum;
     private ProgressDialog progressDialog = null;
 
     @Override

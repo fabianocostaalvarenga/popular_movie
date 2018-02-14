@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_arrow_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="3dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
+
+    <TextView
+        android:id="@+id/tv_trailer_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:textColor="@color/colorDetailInfo"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_arrow_play"
+        app:layout_constraintLeft_toRightOf="@+id/iv_arrow_play"
+        app:layout_constraintTop_toTopOf="@+id/iv_arrow_play"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Batman v Superman: Dawn of Justice" />
+
+</android.support.constraint.ConstraintLayout>

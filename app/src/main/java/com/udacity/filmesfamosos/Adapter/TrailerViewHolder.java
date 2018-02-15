@@ -1,6 +1,5 @@
 package com.udacity.filmesfamosos.Adapter;
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -17,10 +16,9 @@ public class TrailerViewHolder extends RecyclerView.ViewHolder implements Serial
 
     public final TextView name;
 
-    public TrailerViewHolder(View itemView, @NonNull View.OnClickListener listener) {
+    public TrailerViewHolder(View itemView) {
         super(itemView);
         this.name = (TextView) itemView.findViewById(R.id.tv_trailer_title);
-        this.name.setOnClickListener(listener);
     }
 
 }

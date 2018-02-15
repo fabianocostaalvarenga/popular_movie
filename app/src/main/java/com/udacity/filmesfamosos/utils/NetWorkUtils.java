@@ -1,6 +1,5 @@
 package com.udacity.filmesfamosos.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,7 +27,9 @@ public class NetWorkUtils {
         try {
             Uri.Builder builder = Uri.parse(urlBase).buildUpon();
 
-            builder.appendEncodedPath(urlPath);
+            if(null != urlPath) {
+                builder.appendEncodedPath(urlPath);
+            }
 
             if(null != queryParameter && queryParameter.size() > 0) {
                 for (Map.Entry<String, String> element : queryParameter.entrySet()) {

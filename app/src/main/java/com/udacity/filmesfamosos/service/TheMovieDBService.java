@@ -44,7 +44,7 @@ public class TheMovieDBService {
     private static final String API_TMDB_BASE_URL =
             "https://image.tmdb.org/t/p/w342";
 
-    private static final String YOUTUBE_VIEW_URL =
+    public static final String YOUTUBE_VIEW_URL =
             "https://www.youtube.com/watch"; //?v=Wfql_DoHRKc
 
     public static List<PopularMovieDTO> listMoviesBy(String apiKey) {

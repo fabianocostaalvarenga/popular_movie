@@ -3,17 +3,17 @@ package com.udacity.filmesfamosos;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.udacity.filmesfamosos.Adapter.TrailerLineRecycleAdapter;
+import com.udacity.filmesfamosos.Adapter.CustomRecycleViewOnClickListener;
+import com.udacity.filmesfamosos.Adapter.TrailerRecycleViewAdapter;
 import com.udacity.filmesfamosos.databinding.ActivityDetailBinding;
 import com.udacity.filmesfamosos.model.TrailerModel;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
@@ -23,7 +23,10 @@ import com.udacity.filmesfamosos.tasks.ListTrailersAsyncTaskExecutor;
 import com.udacity.filmesfamosos.utils.DateUtils;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fabiano.alvarenga on 10/22/17.
@@ -60,13 +63,26 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         trailersRecycle.setLayoutManager(layout);
 
-        trailersRecycle.setAdapter(new TrailerLineRecycleAdapter(this, trailerModels, new View.OnClickListener() {
+        trailersRecycle.setAdapter(new TrailerRecycleViewAdapter(this, trailerModels, new CustomRecycleViewOnClickListener<TrailerModel>() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(), ((AppCompatTextView) v).getText(), Toast.LENGTH_LONG).show();
+            public void onClick(TrailerModel trailerModel) {
+                launcherTrailerIntentView(trailerModel);
             }
+
         }));
 
+    }
+
+    private void launcherTrailerIntentView(TrailerModel trailerModel) {
+        Map<String, String> queryParams = new HashMap<String, String>();
+        queryParams.put("v", trailerModel.getKey());
+        URL url = NetWorkUtils.makeUrl(TheMovieDBService.YOUTUBE_VIEW_URL, null, queryParams);
+        Intent intentPlay = new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString()));
+        Intent chooser = Intent.createChooser(intentPlay , "Open With");
+
+        if (intentPlay.resolveActivity(getPackageManager()) != null) {
+            startActivity(chooser);
+        }
     }
 
     private void setComponentsValues(PopularMovieDTO popularMovieDTO) {

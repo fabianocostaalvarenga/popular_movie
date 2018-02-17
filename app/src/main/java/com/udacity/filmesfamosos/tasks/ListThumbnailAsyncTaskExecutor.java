@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
+import com.udacity.filmesfamosos.repository.FavoriteMovieService;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
 import com.udacity.filmesfamosos.utils.ApplicationUtils;
 
@@ -23,10 +24,12 @@ public class ListThumbnailAsyncTaskExecutor
     private String apiKey;
 
     private AsyncTaskDelegate delegate = null;
+    private FavoriteMovieService favoriteMovieService;
 
     public ListThumbnailAsyncTaskExecutor(AsyncTaskDelegate responder) {
         this.context =  ((Activity)responder).getApplicationContext();
         this.delegate = responder;
+        this.favoriteMovieService = new FavoriteMovieService(context);
     }
 
     @Override
@@ -38,8 +41,16 @@ public class ListThumbnailAsyncTaskExecutor
 
     @Override
     protected List<PopularMovieDTO> doInBackground(FilterEnum... filterEnum) {
-        apiKey = ApplicationUtils.getMetaDataValue(context, METADATA_API_KEY);
-        List<PopularMovieDTO> result = TheMovieDBService.listMoviesBy(filterEnum[0], apiKey);
+
+        List<PopularMovieDTO> result = null;
+
+        if(FilterEnum.FAVORITE.equals(filterEnum[0])){
+            result = favoriteMovieService.getAll();
+        } else {
+            apiKey = ApplicationUtils.getMetaDataValue(context, METADATA_API_KEY);
+            result = TheMovieDBService.listMoviesBy(filterEnum[0], apiKey);
+        }
+
         return result;
     }
 

@@ -14,6 +14,7 @@ import android.widget.GridView;
 import com.udacity.filmesfamosos.Adapter.ImageAdapter;
 import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
+import com.udacity.filmesfamosos.repository.FavoriteMovieService;
 import com.udacity.filmesfamosos.tasks.AsyncTaskDelegate;
 import com.udacity.filmesfamosos.tasks.ListThumbnailAsyncTaskExecutor;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
@@ -24,11 +25,14 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
 
     private GridView gridView;
     private ProgressDialog progressDialog = null;
+    private static FilterEnum latestFilter = FilterEnum.POPULAR_MOVIES;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
+
+        checkTextTitlePage();
 
         gridView = (GridView) findViewById(R.id.gridview);
 
@@ -39,8 +43,18 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
             }
         });
 
-        executeRequest(FilterEnum.POPULAR_MOVIES);
+        executeRequest(latestFilter);
 
+    }
+
+    private void checkTextTitlePage() {
+        if (FilterEnum.POPULAR_MOVIES.equals(latestFilter)) {
+            this.setTitle(R.string.item_menu_popular_movie);
+        } else if (FilterEnum.TOP_RATED.equals(latestFilter)) {
+            this.setTitle(R.string.item_menu_top_rated);
+        } else if (FilterEnum.FAVORITE.equals(latestFilter)) {
+            this.setTitle(R.string.item_menu_favorites);
+        }
     }
 
     @Override
@@ -54,11 +68,13 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
 
         if(item.getItemId() == R.id.popular_movie) {
             executeRequest(FilterEnum.POPULAR_MOVIES);
-            this.setTitle(R.string.item_menu_popular_movie);
         } else if(item.getItemId() == R.id.top_rated) {
             executeRequest(FilterEnum.TOP_RATED);
-            this.setTitle(R.string.item_menu_top_rated);
+        } else if(item.getItemId() == R.id.favorite) {
+            executeRequest(FilterEnum.FAVORITE);
         }
+
+        checkTextTitlePage();
 
         return true;
     }
@@ -66,10 +82,19 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
     private void openDetailView(PopularMovieDTO popularMovieDTO) {
         Intent intent = new Intent(PrincipalActivity.this, DetailMovieActivity.class);
         intent.putExtra(PopularMovieDTO.POPULAR_MOVIE_DTO, popularMovieDTO);
+        intent.putExtra("LATEST_FILTER", latestFilter);
         startActivity(intent);
     }
 
     private void executeRequest(final FilterEnum filterEnum) {
+
+        latestFilter = filterEnum;
+
+        if(FilterEnum.FAVORITE.equals(filterEnum)) {
+            new ListThumbnailAsyncTaskExecutor(this).execute(filterEnum);
+            return;
+        }
+
         if(NetWorkUtils.isOnline(this)) {
             new ListThumbnailAsyncTaskExecutor(this).execute(filterEnum);
         } else {
@@ -108,4 +133,11 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(FilterEnum.FAVORITE.equals(latestFilter)) {
+            new ListThumbnailAsyncTaskExecutor(this).execute(latestFilter);
+        }
+    }
 }

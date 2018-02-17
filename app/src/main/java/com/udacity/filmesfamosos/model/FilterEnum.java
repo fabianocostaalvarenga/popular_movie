@@ -7,7 +7,8 @@ package com.udacity.filmesfamosos.model;
 public enum FilterEnum {
 
     POPULAR_MOVIES("popular"),
-    TOP_RATED("top_rated");
+    TOP_RATED("top_rated"),
+    FAVORITE("favorite");
 
     private String filter;
 

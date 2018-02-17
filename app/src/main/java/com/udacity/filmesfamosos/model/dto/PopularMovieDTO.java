@@ -19,6 +19,16 @@ public class PopularMovieDTO implements Serializable {
 
     public static final String POPULAR_MOVIE_DTO = "popularMovieDTO";
 
+
+    public PopularMovieDTO(Long id, String posterPath, Date releaseDate, String originalTitle, BigDecimal voteAverage, String overview){
+        this.id = id;
+        this.posterPath = posterPath;
+        this.releaseDate = releaseDate;
+        this.originalTitle = originalTitle;
+        this.voteAverage = voteAverage;
+        this.overview = overview;
+    }
+
     private Boolean adult;
 
     @SerializedName("backdrop_path")

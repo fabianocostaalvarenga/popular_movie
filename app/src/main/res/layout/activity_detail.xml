@@ -8,7 +8,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true" android:scrollbars="none">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -133,21 +133,106 @@
                 app:layout_constraintLeft_toLeftOf="@+id/tv_overview"
                 app:layout_constraintTop_toBottomOf="@+id/iv_line_divider" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/lv_trailers"
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="8dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:scrollbars="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                android:orientation="vertical"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_trailer"/>
+                app:layout_constraintTop_toBottomOf="@+id/tv_trailer">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/lv_trailers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:scrollbars="none"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/iv_line_divider_midle"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_below="@+id/lv_trailers"
+                    android:background="@color/colorDetailInfo"
+                    app:srcCompat="@drawable/shape_rectangle_fill_light" />
+
+                <TextView
+                    android:id="@+id/tv_comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_below="@+id/iv_line_divider_midle"
+                    android:text="@string/label_comments"
+                    android:textSize="24sp" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_comments"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@android:color/background_light"
+                    app:cardCornerRadius="6dp"
+                    app:cardElevation="6dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_author"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginLeft="8dp"
+                            tools:text="Andres Gomez"
+                            android:textSize="16sp"
+                            android:textColor="@color/colorPrimaryDark" android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/info_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginTop="8dp"
+                            tools:text="Fearing the actions of a god-like Super Hero left unchecked, Gotham City`s own formidable, forceful vigilante takes on Metropolis`s most revered, modern-day savior, while the world wrestles with what sort of hero it really needs." />
+
+                        <TextView
+                            android:id="@+id/tv_site"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="8dp"
+                            android:textAlignment="textEnd"
+                            tools:text="https://www.themoviedb.org/review/55a58e46c3a3682bb2000065"
+                            android:textSize="10sp"
+                            android:textColor="@android:color/holo_blue_dark" android:textStyle="italic"/>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </RelativeLayout>
 
         </android.support.constraint.ConstraintLayout>
+
     </android.support.v4.widget.NestedScrollView>
 </layout>

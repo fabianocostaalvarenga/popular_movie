@@ -10,6 +10,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.udacity.filmesfamosos.R;
 import com.udacity.filmesfamosos.model.FilterEnum;
+import com.udacity.filmesfamosos.model.ReviewModel;
 import com.udacity.filmesfamosos.model.TrailerModel;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
@@ -74,6 +75,18 @@ public class TheMovieDBService {
         return listTrailersModel(inputStream);
     }
 
+    public static List<ReviewModel> listReviewsByMovie(PopularMovieDTO popularMovieDTO, String apiKey) {
+
+        Map<String, String> queryParameter = new HashMap<>();
+        queryParameter.put("api_key", apiKey);
+
+        String urlPath = String.valueOf(popularMovieDTO.getId()) + "/reviews";
+        URL url = NetWorkUtils.makeUrl(API_THEMOVIEDB_BASE_URL, urlPath, queryParameter);
+        InputStream inputStream = NetWorkUtils.requestMovies(url);
+
+        return listReviewsModel(inputStream);
+    }
+
     public static URL getUrlForThumbnail(PopularMovieDTO popularMovieDTO) {
         return NetWorkUtils.makeUrl(API_TMDB_BASE_URL, popularMovieDTO.getPosterPath(), null);
     }
@@ -128,6 +141,40 @@ public class TheMovieDBService {
             JSONArray arr = jsonObject.getJSONArray("results");
 
             Type listType = new TypeToken<List<TrailerModel>>() {}.getType();
+
+            result = new Gson().fromJson(String.valueOf(arr), listType);
+
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        }
+
+        return result;
+
+    }
+
+    private static List<ReviewModel> listReviewsModel(InputStream in) {
+        BufferedReader streamReader = null;
+        List<ReviewModel> result = null;
+        try {
+            streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            StringBuilder responseStrBuilder = new StringBuilder();
+
+            String inputStr;
+            while ((inputStr = streamReader.readLine()) != null)
+                responseStrBuilder.append(inputStr);
+
+            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
+
+            JSONArray arr = jsonObject.getJSONArray("results");
+
+            Type listType = new TypeToken<List<ReviewModel>>() {}.getType();
 
             result = new Gson().fromJson(String.valueOf(arr), listType);
 

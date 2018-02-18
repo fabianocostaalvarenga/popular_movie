@@ -3,6 +3,7 @@ package com.udacity.filmesfamosos;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import com.udacity.filmesfamosos.tasks.AsyncTaskDelegate;
 import com.udacity.filmesfamosos.tasks.ThumbnailAsyncTaskExecutor;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDelegate<List<MovieDTO>> {
@@ -25,6 +27,8 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
     private GridView gridView;
     private ProgressDialog progressDialog = null;
     private static FilterEnum latestFilter = FilterEnum.POPULAR_MOVIES;
+    private List<MovieDTO> movieDTOs;
+    private ImageAdapter imageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +46,24 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
             }
         });
 
-        executeRequest(latestFilter);
+        if(null == savedInstanceState)
+            executeRequest(latestFilter);
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("dtos", (ArrayList<? extends Parcelable>) this.movieDTOs);
+        outState.putParcelable("imgAdapter", imageAdapter);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        this.movieDTOs = savedInstanceState.getParcelableArrayList("dtos");
+        this.imageAdapter = savedInstanceState.getParcelable("imgAdapter");
+        gridView.setAdapter(this.imageAdapter);
     }
 
     private void checkTextTitlePage() {
@@ -121,9 +141,12 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
     }
 
     @Override
-    public void processFinish(List<MovieDTO> object) {
+    public void processFinish(List<MovieDTO> movieDTOs) {
 
-        gridView.setAdapter(new ImageAdapter(this, object));
+        this.movieDTOs = movieDTOs;
+        this.imageAdapter = new ImageAdapter(this, movieDTOs);
+
+        gridView.setAdapter(this.imageAdapter);
 
         if(progressDialog != null) {
             progressDialog.dismiss();

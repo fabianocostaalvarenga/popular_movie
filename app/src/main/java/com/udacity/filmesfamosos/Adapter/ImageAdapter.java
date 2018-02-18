@@ -2,6 +2,8 @@ package com.udacity.filmesfamosos.Adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 import com.udacity.filmesfamosos.R;
 import com.udacity.filmesfamosos.model.dto.MovieDTO;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
@@ -23,7 +24,7 @@ import java.util.List;
  * Created by fabiano.alvarenga on 10/15/17.
  */
 
-public class ImageAdapter extends BaseAdapter {
+public class ImageAdapter extends BaseAdapter implements Parcelable {
 
     private static final String TAG = "ImageAdapter";
 
@@ -32,7 +33,6 @@ public class ImageAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
 
     private Picasso picasso;
-    private RequestCreator requestCreator;
 
     public ImageAdapter(Context context, List<MovieDTO> iImages) {
         this.context = context;
@@ -56,13 +56,15 @@ public class ImageAdapter extends BaseAdapter {
 
         try {
             url = TheMovieDBService.getUrlThumbnail(movieDTOs.get(position));
-            this.requestCreator = this.picasso.load(String.valueOf(url.toURI()));
+            this.picasso
+                    .load(String.valueOf(url.toURI()))
+                    .resize(342,513)
+                    .error(R.mipmap.ic_launcher_round)
+                    .into(imageView);
         } catch (URISyntaxException e) {
             Log.e(TAG, "Load image from url failed... {"+url.toString()+"}");
             e.printStackTrace();
         }
-
-        this.requestCreator.error(R.mipmap.ic_launcher_round).into(imageView);
 
         return imgView;
     }
@@ -88,4 +90,29 @@ public class ImageAdapter extends BaseAdapter {
         return i;
     }
 
+    protected ImageAdapter(Parcel in) {
+        movieDTOs = in.createTypedArrayList(MovieDTO.CREATOR);
+    }
+
+    public static final Creator<ImageAdapter> CREATOR = new Creator<ImageAdapter>() {
+        @Override
+        public ImageAdapter createFromParcel(Parcel in) {
+            return new ImageAdapter(in);
+        }
+
+        @Override
+        public ImageAdapter[] newArray(int size) {
+            return new ImageAdapter[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(movieDTOs);
+    }
 }

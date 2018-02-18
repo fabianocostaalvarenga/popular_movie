@@ -1,5 +1,8 @@
 package com.udacity.filmesfamosos.model.dto;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.udacity.filmesfamosos.model.BelongsModel;
 import com.udacity.filmesfamosos.model.ProductionCountriesModel;
@@ -15,10 +18,9 @@ import java.util.List;
  * Created by fabiano.alvarenga on 10/15/17.
  */
 
-public class MovieDTO implements Serializable {
+public class MovieDTO implements Parcelable {
 
     public static final String POPULAR_MOVIE_DTO = "popularMovieDTO";
-
 
     public MovieDTO(Long id, String posterPath, Date releaseDate, String originalTitle, BigDecimal voteAverage, String overview){
         this.id = id;
@@ -282,4 +284,39 @@ public class MovieDTO implements Serializable {
         this.voteCounte = voteCounte;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public MovieDTO(Parcel in) {
+        id = in.readLong();
+        posterPath = in.readString();
+        releaseDate = new Date(in.readLong());
+        originalTitle = in.readString();
+        voteAverage = BigDecimal.valueOf(in.readDouble());
+        overview = in.readString();
+    }
+
+    public static final Creator<MovieDTO> CREATOR = new Creator<MovieDTO>() {
+        @Override
+        public MovieDTO createFromParcel(Parcel in) {
+            return new MovieDTO(in);
+        }
+
+        @Override
+        public MovieDTO[] newArray(int size) {
+            return new MovieDTO[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(posterPath);
+        dest.writeLong(releaseDate.getTime());
+        dest.writeString(originalTitle);
+        dest.writeDouble(voteAverage.doubleValue());
+        dest.writeString(overview);
+    }
 }

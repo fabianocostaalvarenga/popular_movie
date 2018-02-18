@@ -17,10 +17,10 @@ import java.util.List;
 
 public class ReviewsRecycleViewAdapter extends RecyclerView.Adapter {
 
-    private List<Object> reviewsModels;
+    private List<ReviewModel> reviewsModels;
     private Context context;
 
-    public ReviewsRecycleViewAdapter(Context context, List<Object> reviewsModels) {
+    public ReviewsRecycleViewAdapter(Context context, List<ReviewModel> reviewsModels) {
         this.reviewsModels = reviewsModels;
         this.context = context;
     }
@@ -42,7 +42,7 @@ public class ReviewsRecycleViewAdapter extends RecyclerView.Adapter {
 
             ReviewViewHolder viewHolder = (ReviewViewHolder) holder;
 
-            final ReviewModel reviewModel = (ReviewModel) reviewsModels.get(position);
+            final ReviewModel reviewModel = reviewsModels.get(position);
 
             viewHolder.author.setText(reviewModel.getAuthor());
             viewHolder.content.setText(reviewModel.getContent());

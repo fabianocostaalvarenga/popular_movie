@@ -17,11 +17,11 @@ import java.util.List;
 
 public class TrailerRecycleViewAdapter extends RecyclerView.Adapter {
 
-    private List<Object> trailerModels;
+    private List<TrailerModel> trailerModels;
     private Context context;
     private CustomRecycleViewOnClickListener listener;
 
-    public TrailerRecycleViewAdapter(Context context, List<Object> trailerModels, CustomRecycleViewOnClickListener listener) {
+    public TrailerRecycleViewAdapter(Context context, List<TrailerModel> trailerModels, CustomRecycleViewOnClickListener listener) {
         this.trailerModels = trailerModels;
         this.context = context;
         this.listener = listener;
@@ -44,7 +44,7 @@ public class TrailerRecycleViewAdapter extends RecyclerView.Adapter {
 
             TrailerViewHolder viewHolder = (TrailerViewHolder) holder;
 
-            final TrailerModel trailerModel = (TrailerModel) trailerModels.get(position);
+            final TrailerModel trailerModel = trailerModels.get(position);
 
             viewHolder.name.setText(trailerModel.getName());
 

@@ -20,12 +20,12 @@ import com.udacity.filmesfamosos.databinding.ActivityDetailBinding;
 import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.ReviewModel;
 import com.udacity.filmesfamosos.model.TrailerModel;
+import com.udacity.filmesfamosos.model.dto.DetailsResultTaskDTO;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.repository.FavoriteMovieService;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
 import com.udacity.filmesfamosos.tasks.AsyncTaskDelegate;
-import com.udacity.filmesfamosos.tasks.ListReviewsAsyncTaskExecutor;
-import com.udacity.filmesfamosos.tasks.ListTrailersAsyncTaskExecutor;
+import com.udacity.filmesfamosos.tasks.DetailsAsyncTaskExecutor;
 import com.udacity.filmesfamosos.utils.DateUtils;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
@@ -33,14 +33,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * Created by fabiano.alvarenga on 10/22/17.
  */
 
-public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskDelegate<List<Object>> {
+public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskDelegate<DetailsResultTaskDTO> {
 
     private PopularMovieDTO popularMovieDTO;
     private ProgressDialog progressDialog = null;
@@ -89,7 +87,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         }
     }
 
-    private void mountListTrailersItems(List<Object> trailerModels) {
+    private void mountListTrailersItems(List<TrailerModel> trailerModels) {
         RecyclerView trailersRecycle = activityDetailBinding.lvTrailers;
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
@@ -105,7 +103,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
 
     }
 
-    private void mountListReviewsItems(List<Object> reviewModels) {
+    private void mountListReviewsItems(List<ReviewModel> reviewModels) {
         RecyclerView reviewsRecycle = activityDetailBinding.lvReviews;
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
@@ -156,9 +154,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
 
     private void executeRequest(final PopularMovieDTO popularMovieDTO) {
         if(NetWorkUtils.isOnline(this)) {
-            final Executor executor = Executors.newSingleThreadExecutor();
-            new ListTrailersAsyncTaskExecutor(this).executeOnExecutor(executor, popularMovieDTO);
-            new ListReviewsAsyncTaskExecutor(this).executeOnExecutor(executor, popularMovieDTO);
+            new DetailsAsyncTaskExecutor(this).execute(popularMovieDTO);
         } else {
             View view = findViewById(R.id.activity_detail);
             Snackbar snackbar =
@@ -183,15 +179,10 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     }
 
     @Override
-    public void processFinish(List<Object> listObject) {
+    public void processFinish(DetailsResultTaskDTO detailsResultTaskDTO) {
 
-        if (null != listObject && !listObject.isEmpty()) {
-            if (listObject.get(0) instanceof TrailerModel) {
-                mountListTrailersItems(listObject);
-            } else if(listObject.get(0) instanceof ReviewModel) {
-                mountListReviewsItems(listObject);
-            }
-        }
+        mountListTrailersItems(detailsResultTaskDTO.getTrailerModelList());
+        mountListReviewsItems(detailsResultTaskDTO.getReviewModels());
 
         if(progressDialog != null) {
             progressDialog.dismiss();

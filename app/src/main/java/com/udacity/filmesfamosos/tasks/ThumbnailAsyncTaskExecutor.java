@@ -17,7 +17,7 @@ import java.util.List;
  * Created by fabiano.alvarenga on 10/22/17.
  */
 
-public class ListThumbnailAsyncTaskExecutor
+public class ThumbnailAsyncTaskExecutor
         extends AsyncTask<FilterEnum, Integer, List<PopularMovieDTO>> {
 
     private Context context;
@@ -27,7 +27,7 @@ public class ListThumbnailAsyncTaskExecutor
     private AsyncTaskDelegate delegate = null;
     private FavoriteMovieService favoriteMovieService;
 
-    public ListThumbnailAsyncTaskExecutor(AsyncTaskDelegate responder) {
+    public ThumbnailAsyncTaskExecutor(AsyncTaskDelegate responder) {
         this.context =  ((Activity)responder).getApplicationContext();
         this.delegate = responder;
         this.favoriteMovieService = new FavoriteMovieService(context);

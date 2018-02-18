@@ -14,9 +14,8 @@ import android.widget.GridView;
 import com.udacity.filmesfamosos.Adapter.ImageAdapter;
 import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
-import com.udacity.filmesfamosos.repository.FavoriteMovieService;
 import com.udacity.filmesfamosos.tasks.AsyncTaskDelegate;
-import com.udacity.filmesfamosos.tasks.ListThumbnailAsyncTaskExecutor;
+import com.udacity.filmesfamosos.tasks.ThumbnailAsyncTaskExecutor;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
 import java.util.List;
@@ -91,12 +90,12 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
         latestFilter = filterEnum;
 
         if(FilterEnum.FAVORITE.equals(filterEnum)) {
-            new ListThumbnailAsyncTaskExecutor(this).execute(filterEnum);
+            new ThumbnailAsyncTaskExecutor(this).execute(filterEnum);
             return;
         }
 
         if(NetWorkUtils.isOnline(this)) {
-            new ListThumbnailAsyncTaskExecutor(this).execute(filterEnum);
+            new ThumbnailAsyncTaskExecutor(this).execute(filterEnum);
         } else {
             View view = findViewById(R.id.activity_principal);
             Snackbar snackbar =
@@ -137,7 +136,7 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
     protected void onRestart() {
         super.onRestart();
         if(FilterEnum.FAVORITE.equals(latestFilter)) {
-            new ListThumbnailAsyncTaskExecutor(this).execute(latestFilter);
+            new ThumbnailAsyncTaskExecutor(this).execute(latestFilter);
         }
     }
 }

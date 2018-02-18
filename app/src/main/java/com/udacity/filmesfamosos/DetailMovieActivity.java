@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.udacity.filmesfamosos.Adapter.CustomRecycleViewOnClickListener;
 import com.udacity.filmesfamosos.Adapter.ReviewsRecycleViewAdapter;
@@ -44,6 +45,8 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     private ProgressDialog progressDialog = null;
     private Button btFavorite;
     private static FilterEnum latestFilter;
+    private ImageView imgSharing;
+    private TrailerModel firstTrilerModel;
 
     private ActivityDetailBinding activityDetailBinding;
     private FavoriteMovieService favoriteMovieService;
@@ -58,6 +61,8 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
 
         activityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         btFavorite = activityDetailBinding.btFavorite;
+        imgSharing = activityDetailBinding.ivArrowSharing;
+
         favoriteMovieService = new FavoriteMovieService(this);
 
         if(null != intent.getExtras()) {
@@ -70,6 +75,13 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
             @Override
             public void onClick(View v) {
                 onClickFavoriteButton(movieDTO);
+            }
+        });
+
+        imgSharing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launcherSharTrailerIntentView(firstTrilerModel);
             }
         });
 
@@ -121,6 +133,23 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         Intent chooser = Intent.createChooser(intentPlay , "Open With");
 
         if (intentPlay.resolveActivity(getPackageManager()) != null) {
+            startActivity(chooser);
+        }
+    }
+
+    private void launcherSharTrailerIntentView(TrailerModel trailerModel) {
+        Map<String, String> queryParams = new HashMap<String, String>();
+        queryParams.put("v", trailerModel.getKey());
+        URL url = NetWorkUtils.makeUrl(TheMovieDBService.YOUTUBE_VIEW_URL, null, queryParams);
+
+        Intent share = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.putExtra(Intent.EXTRA_SUBJECT, trailerModel.getName());
+        share.putExtra(Intent.EXTRA_TEXT, url.toString());
+        Intent chooser = Intent.createChooser(share , "Sharing With");
+
+        if (share.resolveActivity(getPackageManager()) != null) {
             startActivity(chooser);
         }
     }
@@ -180,6 +209,11 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
 
     @Override
     public void processFinish(DetailsResultTaskDTO detailsResultTaskDTO) {
+
+        if(null != detailsResultTaskDTO.getTrailerModelList()
+                && !detailsResultTaskDTO.getTrailerModelList().isEmpty()) {
+            this.firstTrilerModel = detailsResultTaskDTO.getTrailerModelList().get(0);
+        }
 
         mountListTrailersItems(detailsResultTaskDTO.getTrailerModelList());
         mountListReviewsItems(detailsResultTaskDTO.getReviewModels());

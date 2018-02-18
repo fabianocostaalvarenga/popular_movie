@@ -133,6 +133,18 @@
                 app:layout_constraintLeft_toLeftOf="@+id/tv_overview"
                 app:layout_constraintTop_toBottomOf="@+id/iv_line_divider" />
 
+            <ImageView
+                android:id="@+id/iv_arrow_sharing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_share_black_24dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_trailer"
+                android:layout_marginTop="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_trailer"
+                android:layout_marginBottom="0dp" />
+
             <RelativeLayout
                 android:id="@+id/relativeLayout"
                 android:layout_width="0dp"

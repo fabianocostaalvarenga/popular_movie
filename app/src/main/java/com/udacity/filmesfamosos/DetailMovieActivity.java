@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.udacity.filmesfamosos.Adapter.CustomRecycleViewOnClickListener;
+import com.udacity.filmesfamosos.Adapter.ReviewsRecycleViewAdapter;
 import com.udacity.filmesfamosos.Adapter.TrailerRecycleViewAdapter;
 import com.udacity.filmesfamosos.databinding.ActivityDetailBinding;
 import com.udacity.filmesfamosos.model.FilterEnum;
@@ -104,19 +105,13 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
 
     }
 
-    private void mountListReviewsItems(List<Object> trailerModels) {
-        RecyclerView reviewsRecycle = activityDetailBinding.lvTrailers;
+    private void mountListReviewsItems(List<Object> reviewModels) {
+        RecyclerView reviewsRecycle = activityDetailBinding.lvReviews;
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         reviewsRecycle.setLayoutManager(layout);
 
-        reviewsRecycle.setAdapter(new TrailerRecycleViewAdapter(this, trailerModels, new CustomRecycleViewOnClickListener<TrailerModel>() {
-            @Override
-            public void onClick(TrailerModel trailerModel) {
-                launcherTrailerIntentView(trailerModel);
-            }
-
-        }));
+        reviewsRecycle.setAdapter(new ReviewsRecycleViewAdapter(this, reviewModels));
 
     }
 

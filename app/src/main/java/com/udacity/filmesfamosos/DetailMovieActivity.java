@@ -81,7 +81,9 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         imgSharing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launcherSharTrailerIntentView(firstTrilerModel);
+                if(null != firstTrilerModel) {
+                    launcherSharTrailerIntentView(firstTrilerModel);
+                }
             }
         });
 

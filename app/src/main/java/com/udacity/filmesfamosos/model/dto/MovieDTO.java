@@ -15,12 +15,12 @@ import java.util.List;
  * Created by fabiano.alvarenga on 10/15/17.
  */
 
-public class PopularMovieDTO implements Serializable {
+public class MovieDTO implements Serializable {
 
     public static final String POPULAR_MOVIE_DTO = "popularMovieDTO";
 
 
-    public PopularMovieDTO(Long id, String posterPath, Date releaseDate, String originalTitle, BigDecimal voteAverage, String overview){
+    public MovieDTO(Long id, String posterPath, Date releaseDate, String originalTitle, BigDecimal voteAverage, String overview){
         this.id = id;
         this.posterPath = posterPath;
         this.releaseDate = releaseDate;

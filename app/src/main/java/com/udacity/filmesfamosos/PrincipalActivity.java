@@ -13,14 +13,14 @@ import android.widget.GridView;
 
 import com.udacity.filmesfamosos.Adapter.ImageAdapter;
 import com.udacity.filmesfamosos.model.FilterEnum;
-import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
+import com.udacity.filmesfamosos.model.dto.MovieDTO;
 import com.udacity.filmesfamosos.tasks.AsyncTaskDelegate;
 import com.udacity.filmesfamosos.tasks.ThumbnailAsyncTaskExecutor;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
 import java.util.List;
 
-public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDelegate<List<PopularMovieDTO>> {
+public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDelegate<List<MovieDTO>> {
 
     private GridView gridView;
     private ProgressDialog progressDialog = null;
@@ -38,7 +38,7 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                openDetailView((PopularMovieDTO) adapterView.getItemAtPosition(position));
+                openDetailView((MovieDTO) adapterView.getItemAtPosition(position));
             }
         });
 
@@ -78,9 +78,9 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
         return true;
     }
 
-    private void openDetailView(PopularMovieDTO popularMovieDTO) {
+    private void openDetailView(MovieDTO movieDTO) {
         Intent intent = new Intent(PrincipalActivity.this, DetailMovieActivity.class);
-        intent.putExtra(PopularMovieDTO.POPULAR_MOVIE_DTO, popularMovieDTO);
+        intent.putExtra(MovieDTO.POPULAR_MOVIE_DTO, movieDTO);
         intent.putExtra("LATEST_FILTER", latestFilter);
         startActivity(intent);
     }
@@ -121,7 +121,7 @@ public class PrincipalActivity extends AppCompatActivity implements AsyncTaskDel
     }
 
     @Override
-    public void processFinish(List<PopularMovieDTO> object) {
+    public void processFinish(List<MovieDTO> object) {
 
         gridView.setAdapter(new ImageAdapter(this, object));
 

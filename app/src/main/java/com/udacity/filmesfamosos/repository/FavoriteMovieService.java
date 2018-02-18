@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
+import com.udacity.filmesfamosos.model.dto.MovieDTO;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class FavoriteMovieService {
         database = dbHelper.getWritableDatabase();
     }
 
-    public List<PopularMovieDTO> getAll() {
+    public List<MovieDTO> getAll() {
 
         Cursor cursor = database.query(
                 MoviesContract.MoviesEntry.TABLE_NAME,
@@ -43,14 +43,14 @@ public class FavoriteMovieService {
     }
 
     @NonNull
-    private List<PopularMovieDTO> popularMovieFactory(Cursor cursor) {
-        List<PopularMovieDTO> popularMovieDTOs = new ArrayList<PopularMovieDTO>();
+    private List<MovieDTO> popularMovieFactory(Cursor cursor) {
+        List<MovieDTO> movieDTOs = new ArrayList<MovieDTO>();
 
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
 
-                popularMovieDTOs.add(
-                        new PopularMovieDTO(
+                movieDTOs.add(
+                        new MovieDTO(
                                 cursor.getLong(cursor.getColumnIndexOrThrow(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE_ID)),
                                 cursor.getString(cursor.getColumnIndexOrThrow(MoviesContract.MoviesEntry.COLUMN_NAME_POSTER_PATH)),
                                 new Date(cursor.getLong(cursor.getColumnIndexOrThrow(MoviesContract.MoviesEntry.COLUMN_NAME_RELEASE_DATE))),
@@ -64,10 +64,10 @@ public class FavoriteMovieService {
             }
         }
         cursor.close();
-        return popularMovieDTOs;
+        return movieDTOs;
     }
 
-    public boolean add(PopularMovieDTO movieDTO) {
+    public boolean add(MovieDTO movieDTO) {
         ContentValues cv = new ContentValues();
         cv.put(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE_ID, movieDTO.getId());
         cv.put(MoviesContract.MoviesEntry.COLUMN_NAME_POSTER_PATH, movieDTO.getPosterPath());
@@ -82,7 +82,7 @@ public class FavoriteMovieService {
         return database.delete(MoviesContract.MoviesEntry.TABLE_NAME, MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE_ID + "=" + id, null) > 0;
     }
 
-    public List<PopularMovieDTO> listByMovieID(Long movieId) {
+    public List<MovieDTO> listByMovieID(Long movieId) {
         String selection = MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE_ID + " = ?";
         String[] selectionArgs = { String.valueOf(movieId) };
 
@@ -99,14 +99,14 @@ public class FavoriteMovieService {
         return popularMovieFactory(cursor);
     }
 
-    public boolean isFavorite(PopularMovieDTO popularMovieDTO) {
+    public boolean isFavorite(MovieDTO movieDTO) {
         boolean result = false;
 
-        List<PopularMovieDTO> popularMovieDTOs = listByMovieID(popularMovieDTO.getId());
-        PopularMovieDTO movieDTOResult = null;
+        List<MovieDTO> movieDTOs = listByMovieID(movieDTO.getId());
+        MovieDTO movieDTOResult = null;
 
-        if(null != popularMovieDTOs && !popularMovieDTOs.isEmpty()) {
-            movieDTOResult = popularMovieDTOs.get(0);
+        if(null != movieDTOs && !movieDTOs.isEmpty()) {
+            movieDTOResult = movieDTOs.get(0);
         }
 
         if(null != movieDTOResult) { result = true; }

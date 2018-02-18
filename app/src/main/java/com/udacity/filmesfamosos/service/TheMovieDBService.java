@@ -9,7 +9,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.udacity.filmesfamosos.R;
 import com.udacity.filmesfamosos.model.FilterEnum;
-import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
+import com.udacity.filmesfamosos.model.dto.MovieDTO;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
 import org.json.JSONArray;
@@ -95,12 +95,12 @@ public class TheMovieDBService {
 
     }
 
-    public static URL getUrlThumbnail(PopularMovieDTO popularMovieDTO) {
-        return NetWorkUtils.makeUrl(API_TMDB_BASE_URL, popularMovieDTO.getPosterPath(), null);
+    public static URL getUrlThumbnail(MovieDTO movieDTO) {
+        return NetWorkUtils.makeUrl(API_TMDB_BASE_URL, movieDTO.getPosterPath(), null);
     }
 
-    public static void processImage(Context context, PopularMovieDTO popularMovieDTO, ImageView imageView) {
-        URL url = getUrlThumbnail(popularMovieDTO);
+    public static void processImage(Context context, MovieDTO movieDTO, ImageView imageView) {
+        URL url = getUrlThumbnail(movieDTO);
         try {
             RequestCreator requestCreator = Picasso.with(context).load(String.valueOf(url.toURI()));
             requestCreator.error(R.mipmap.ic_launcher_round).into(imageView);

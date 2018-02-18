@@ -9,7 +9,7 @@ import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.ReviewModel;
 import com.udacity.filmesfamosos.model.TrailerModel;
 import com.udacity.filmesfamosos.model.dto.DetailsResultTaskDTO;
-import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
+import com.udacity.filmesfamosos.model.dto.MovieDTO;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
 import com.udacity.filmesfamosos.utils.ApplicationUtils;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * Created by fabiano.alvarenga on 18/02/18.
  */
 
-public class DetailsAsyncTaskExecutor extends AsyncTask<PopularMovieDTO, Integer, DetailsResultTaskDTO> {
+public class DetailsAsyncTaskExecutor extends AsyncTask<MovieDTO, Integer, DetailsResultTaskDTO> {
 
     private Context context;
     private static final String METADATA_API_KEY = "com.themoviesdb.api.key";
@@ -40,7 +40,7 @@ public class DetailsAsyncTaskExecutor extends AsyncTask<PopularMovieDTO, Integer
     }
 
     @Override
-    protected DetailsResultTaskDTO doInBackground(PopularMovieDTO... movieDTOs) {
+    protected DetailsResultTaskDTO doInBackground(MovieDTO... movieDTOs) {
         apiKey = ApplicationUtils.getMetaDataValue(context, METADATA_API_KEY);
         List<ReviewModel> reviewModels = (List<ReviewModel>) (Object) TheMovieDBService.requestTheMovieDBApi(apiKey, FilterEnum.REVIEWS, movieDTOs[0].getId(),  new TypeToken<List<ReviewModel>>() {}.getType());
         List<TrailerModel> trailerModels = (List<TrailerModel>) (Object) TheMovieDBService.requestTheMovieDBApi(apiKey, FilterEnum.VIDEOS, movieDTOs[0].getId(), new TypeToken<List<TrailerModel>>() {}.getType());

@@ -21,7 +21,7 @@ import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.ReviewModel;
 import com.udacity.filmesfamosos.model.TrailerModel;
 import com.udacity.filmesfamosos.model.dto.DetailsResultTaskDTO;
-import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
+import com.udacity.filmesfamosos.model.dto.MovieDTO;
 import com.udacity.filmesfamosos.repository.FavoriteMovieService;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
 import com.udacity.filmesfamosos.tasks.AsyncTaskDelegate;
@@ -40,7 +40,7 @@ import java.util.Map;
 
 public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskDelegate<DetailsResultTaskDTO> {
 
-    private PopularMovieDTO popularMovieDTO;
+    private MovieDTO movieDTO;
     private ProgressDialog progressDialog = null;
     private Button btFavorite;
     private static FilterEnum latestFilter;
@@ -61,28 +61,28 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         favoriteMovieService = new FavoriteMovieService(this);
 
         if(null != intent.getExtras()) {
-            popularMovieDTO = (PopularMovieDTO) intent.getExtras().get(PopularMovieDTO.POPULAR_MOVIE_DTO);
+            movieDTO = (MovieDTO) intent.getExtras().get(MovieDTO.POPULAR_MOVIE_DTO);
             latestFilter = (FilterEnum) intent.getExtras().get("LATEST_FILTER");
-            setComponentsValues(popularMovieDTO);
+            setComponentsValues(movieDTO);
         }
 
         btFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickFavoriteButton(popularMovieDTO);
+                onClickFavoriteButton(movieDTO);
             }
         });
 
-        executeRequest(popularMovieDTO);
+        executeRequest(movieDTO);
 
     }
 
-    private void onClickFavoriteButton(PopularMovieDTO popularMovieDTO) {
+    private void onClickFavoriteButton(MovieDTO movieDTO) {
         if(btFavorite.getText().equals(getString(R.string.bt_unmark_favorite))) {
-            favoriteMovieService.remove(popularMovieDTO.getId());
+            favoriteMovieService.remove(movieDTO.getId());
             btFavorite.setText(R.string.bt_mark_favorite);
         } else {
-            favoriteMovieService.add(popularMovieDTO);
+            favoriteMovieService.add(movieDTO);
             btFavorite.setText(R.string.bt_unmark_favorite);
         }
     }
@@ -125,25 +125,25 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         }
     }
 
-    private void setComponentsValues(final PopularMovieDTO popularMovieDTO) {
+    private void setComponentsValues(final MovieDTO movieDTO) {
 
-        verifyTextFavoriteButton(popularMovieDTO);
+        verifyTextFavoriteButton(movieDTO);
 
-        activityDetailBinding.tvOriginalTitle.setText(popularMovieDTO.getOriginalTitle());
-        activityDetailBinding.tvReleaseDate.setText(DateUtils.getYearDate(popularMovieDTO.getReleaseDate()));
+        activityDetailBinding.tvOriginalTitle.setText(movieDTO.getOriginalTitle());
+        activityDetailBinding.tvReleaseDate.setText(DateUtils.getYearDate(movieDTO.getReleaseDate()));
         activityDetailBinding.tvDuration.setText("N/I");
-        activityDetailBinding.tvVoteAverage.setText(String.valueOf(popularMovieDTO.getVoteAverage()));
-        activityDetailBinding.tvOverview.setText(popularMovieDTO.getOverview());
+        activityDetailBinding.tvVoteAverage.setText(String.valueOf(movieDTO.getVoteAverage()));
+        activityDetailBinding.tvOverview.setText(movieDTO.getOverview());
 
-        TheMovieDBService.processImage(this, popularMovieDTO, activityDetailBinding.imvPoster);
+        TheMovieDBService.processImage(this, movieDTO, activityDetailBinding.imvPoster);
 
     }
 
-    private void verifyTextFavoriteButton(final PopularMovieDTO popularMovieDTO) {
+    private void verifyTextFavoriteButton(final MovieDTO movieDTO) {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                if(favoriteMovieService.isFavorite(popularMovieDTO)) {
+                if(favoriteMovieService.isFavorite(movieDTO)) {
                     btFavorite.setText(R.string.bt_unmark_favorite);
                 } else {
                     btFavorite.setText(R.string.bt_mark_favorite);
@@ -152,9 +152,9 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         });
     }
 
-    private void executeRequest(final PopularMovieDTO popularMovieDTO) {
+    private void executeRequest(final MovieDTO movieDTO) {
         if(NetWorkUtils.isOnline(this)) {
-            new DetailsAsyncTaskExecutor(this).execute(popularMovieDTO);
+            new DetailsAsyncTaskExecutor(this).execute(movieDTO);
         } else {
             View view = findViewById(R.id.activity_detail);
             Snackbar snackbar =
@@ -162,7 +162,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
             snackbar.setAction(getString(R.string.label_retry), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    executeRequest(popularMovieDTO);
+                    executeRequest(movieDTO);
                 }
             });
             snackbar.show();

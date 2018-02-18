@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.gson.reflect.TypeToken;
+import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.TrailerModel;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
@@ -38,7 +40,7 @@ public class ListTrailersAsyncTaskExecutor extends AsyncTask<PopularMovieDTO, In
     @Override
     protected List<TrailerModel> doInBackground(PopularMovieDTO... movieDTOs) {
         apiKey = ApplicationUtils.getMetaDataValue(context, METADATA_API_KEY);
-        List<TrailerModel> result = TheMovieDBService.listTrailersByMovie(movieDTOs[0], apiKey);
+        List<TrailerModel> result = (List<TrailerModel>) (Object) TheMovieDBService.requestTheMovieDBApi(apiKey, FilterEnum.VIDEOS, movieDTOs[0].getId(), new TypeToken<List<TrailerModel>>() {}.getType());
         return result;
     }
 

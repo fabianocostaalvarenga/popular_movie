@@ -47,7 +47,7 @@ public class NetWorkUtils {
         return urlForRequest;
     }
 
-    public static InputStream requestMovies(URL url) {
+    public static InputStream launchRequest(URL url) {
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
         try {

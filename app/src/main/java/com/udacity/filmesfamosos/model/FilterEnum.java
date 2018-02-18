@@ -8,7 +8,9 @@ public enum FilterEnum {
 
     POPULAR_MOVIES("popular"),
     TOP_RATED("top_rated"),
-    FAVORITE("favorite");
+    FAVORITE("favorite"),
+    VIDEOS("/videos"),
+    REVIEWS("/reviews");
 
     private String filter;
 
@@ -16,8 +18,11 @@ public enum FilterEnum {
         this.filter = filter;
     }
 
-    public String getFilter() {
-        return filter;
+    public String getFilter(Long movieId) {
+        if(null != movieId)
+            return String.valueOf(movieId) + filter;
+        else
+            return filter;
     }
 
 }

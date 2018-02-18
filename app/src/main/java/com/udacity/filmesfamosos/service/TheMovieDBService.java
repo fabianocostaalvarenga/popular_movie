@@ -5,13 +5,10 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.udacity.filmesfamosos.R;
 import com.udacity.filmesfamosos.model.FilterEnum;
-import com.udacity.filmesfamosos.model.ReviewModel;
-import com.udacity.filmesfamosos.model.TrailerModel;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.utils.NetWorkUtils;
 
@@ -46,155 +43,64 @@ public class TheMovieDBService {
             "https://image.tmdb.org/t/p/w342";
 
     public static final String YOUTUBE_VIEW_URL =
-            "https://www.youtube.com/watch"; //?v=Wfql_DoHRKc
+            "https://www.youtube.com/watch";
 
-    public static List<PopularMovieDTO> listMoviesBy(String apiKey) {
-        return listMoviesBy(null, apiKey);
-    }
-
-    public static List<PopularMovieDTO> listMoviesBy(FilterEnum filterEnum, String apiKey) {
+    public static List<Class> requestTheMovieDBApi(String apiKey, FilterEnum filterEnum, Long movieId, Type type) {
 
         Map<String, String> queryParameter = new HashMap<>();
         queryParameter.put("api_key", apiKey);
 
-        URL url = NetWorkUtils.makeUrl(API_THEMOVIEDB_BASE_URL, filterEnum.getFilter(), queryParameter);
-        InputStream inputStream = NetWorkUtils.requestMovies(url);
+        URL url = NetWorkUtils.makeUrl(API_THEMOVIEDB_BASE_URL, filterEnum.getFilter(movieId), queryParameter);
+        InputStream inputStream = NetWorkUtils.launchRequest(url);
 
-        return listPopularMovieDTO(inputStream);
+        return extractListValues(inputStream, type);
     }
 
-    public static List<TrailerModel> listTrailersByMovie(PopularMovieDTO popularMovieDTO, String apiKey) {
+    private static List<Class> extractListValues(InputStream in, Type listType) {
+        BufferedReader streamReader = null;
+        List<Class> result = null;
+        try {
+            streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            StringBuilder responseStrBuilder = new StringBuilder();
 
-        Map<String, String> queryParameter = new HashMap<>();
-        queryParameter.put("api_key", apiKey);
+            String inputStr;
+            while ((inputStr = streamReader.readLine()) != null)
+                responseStrBuilder.append(inputStr);
 
-        String urlPath = String.valueOf(popularMovieDTO.getId()) + "/videos";
-        URL url = NetWorkUtils.makeUrl(API_THEMOVIEDB_BASE_URL, urlPath, queryParameter);
-        InputStream inputStream = NetWorkUtils.requestMovies(url);
+            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
 
-        return listTrailersModel(inputStream);
+            JSONArray arr = jsonObject.getJSONArray("results");
+
+            result = new Gson().fromJson(String.valueOf(arr), listType);
+
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                in.close();
+                streamReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+
     }
 
-    public static List<ReviewModel> listReviewsByMovie(PopularMovieDTO popularMovieDTO, String apiKey) {
-
-        Map<String, String> queryParameter = new HashMap<>();
-        queryParameter.put("api_key", apiKey);
-
-        String urlPath = String.valueOf(popularMovieDTO.getId()) + "/reviews";
-        URL url = NetWorkUtils.makeUrl(API_THEMOVIEDB_BASE_URL, urlPath, queryParameter);
-        InputStream inputStream = NetWorkUtils.requestMovies(url);
-
-        return listReviewsModel(inputStream);
-    }
-
-    public static URL getUrlForThumbnail(PopularMovieDTO popularMovieDTO) {
+    public static URL getUrlThumbnail(PopularMovieDTO popularMovieDTO) {
         return NetWorkUtils.makeUrl(API_TMDB_BASE_URL, popularMovieDTO.getPosterPath(), null);
     }
 
-    private static List<PopularMovieDTO> listPopularMovieDTO(InputStream in) {
-        BufferedReader streamReader = null;
-        List<PopularMovieDTO> result = null;
-        try {
-            streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            StringBuilder responseStrBuilder = new StringBuilder();
-
-            String inputStr;
-            while ((inputStr = streamReader.readLine()) != null)
-                responseStrBuilder.append(inputStr);
-
-            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
-
-            JSONArray arr = jsonObject.getJSONArray("results");
-
-            Type listType = new TypeToken<List<PopularMovieDTO>>() {}.getType();
-
-            result = new Gson().fromJson(String.valueOf(arr), listType);
-
-        } catch (UnsupportedEncodingException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        }
-
-        return result;
-
-    }
-
-    private static List<TrailerModel> listTrailersModel(InputStream in) {
-        BufferedReader streamReader = null;
-        List<TrailerModel> result = null;
-        try {
-            streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            StringBuilder responseStrBuilder = new StringBuilder();
-
-            String inputStr;
-            while ((inputStr = streamReader.readLine()) != null)
-                responseStrBuilder.append(inputStr);
-
-            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
-
-            JSONArray arr = jsonObject.getJSONArray("results");
-
-            Type listType = new TypeToken<List<TrailerModel>>() {}.getType();
-
-            result = new Gson().fromJson(String.valueOf(arr), listType);
-
-        } catch (UnsupportedEncodingException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        }
-
-        return result;
-
-    }
-
-    private static List<ReviewModel> listReviewsModel(InputStream in) {
-        BufferedReader streamReader = null;
-        List<ReviewModel> result = null;
-        try {
-            streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            StringBuilder responseStrBuilder = new StringBuilder();
-
-            String inputStr;
-            while ((inputStr = streamReader.readLine()) != null)
-                responseStrBuilder.append(inputStr);
-
-            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
-
-            JSONArray arr = jsonObject.getJSONArray("results");
-
-            Type listType = new TypeToken<List<ReviewModel>>() {}.getType();
-
-            result = new Gson().fromJson(String.valueOf(arr), listType);
-
-        } catch (UnsupportedEncodingException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        }
-
-        return result;
-
-    }
-
     public static void processImage(Context context, PopularMovieDTO popularMovieDTO, ImageView imageView) {
-        URL url = getUrlForThumbnail(popularMovieDTO);
+        URL url = getUrlThumbnail(popularMovieDTO);
         try {
             RequestCreator requestCreator = Picasso.with(context).load(String.valueOf(url.toURI()));
             requestCreator.error(R.mipmap.ic_launcher_round).into(imageView);
@@ -203,4 +109,5 @@ public class TheMovieDBService {
             e.printStackTrace();
         }
     }
+
 }

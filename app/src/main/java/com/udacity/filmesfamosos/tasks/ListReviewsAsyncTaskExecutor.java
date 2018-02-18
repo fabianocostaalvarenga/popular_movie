@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.gson.reflect.TypeToken;
+import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.ReviewModel;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
@@ -38,7 +40,7 @@ public class ListReviewsAsyncTaskExecutor extends AsyncTask<PopularMovieDTO, Int
     @Override
     protected List<ReviewModel> doInBackground(PopularMovieDTO... movieDTOs) {
         apiKey = ApplicationUtils.getMetaDataValue(context, METADATA_API_KEY);
-        List<ReviewModel> result = TheMovieDBService.listReviewsByMovie(movieDTOs[0], apiKey);
+        List<ReviewModel> result = (List<ReviewModel>) (Object) TheMovieDBService.requestTheMovieDBApi(apiKey, FilterEnum.REVIEWS, movieDTOs[0].getId(),  new TypeToken<List<ReviewModel>>() {}.getType());
         return result;
     }
 

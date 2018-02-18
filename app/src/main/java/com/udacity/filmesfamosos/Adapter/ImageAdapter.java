@@ -55,7 +55,7 @@ public class ImageAdapter extends BaseAdapter {
         URL url = null;
 
         try {
-            url = TheMovieDBService.getUrlForThumbnail(popularMovieDTOs.get(position));
+            url = TheMovieDBService.getUrlThumbnail(popularMovieDTOs.get(position));
             this.requestCreator = this.picasso.load(String.valueOf(url.toURI()));
         } catch (URISyntaxException e) {
             Log.e(TAG, "Load image from url failed... {"+url.toString()+"}");

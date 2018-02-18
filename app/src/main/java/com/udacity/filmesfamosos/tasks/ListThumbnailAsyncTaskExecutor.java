@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.gson.reflect.TypeToken;
 import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.dto.PopularMovieDTO;
 import com.udacity.filmesfamosos.repository.FavoriteMovieService;
@@ -48,7 +49,7 @@ public class ListThumbnailAsyncTaskExecutor
             result = favoriteMovieService.getAll();
         } else {
             apiKey = ApplicationUtils.getMetaDataValue(context, METADATA_API_KEY);
-            result = TheMovieDBService.listMoviesBy(filterEnum[0], apiKey);
+            result = (List<PopularMovieDTO>) (Object) TheMovieDBService.requestTheMovieDBApi(apiKey, filterEnum[0], null, new TypeToken<List<PopularMovieDTO>>() {}.getType());
         }
 
         return result;

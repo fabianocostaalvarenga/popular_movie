@@ -28,6 +28,11 @@
 
         <activity android:name=".DetailMovieActivity" />
 
+        <provider
+            android:name=".repository.MovieContentProvider"
+            android:authorities="@string/content_authority"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

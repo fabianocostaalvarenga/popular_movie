@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import com.google.gson.reflect.TypeToken;
 import com.udacity.filmesfamosos.model.FilterEnum;
 import com.udacity.filmesfamosos.model.dto.MovieDTO;
-import com.udacity.filmesfamosos.repository.FavoriteMovieService;
+import com.udacity.filmesfamosos.service.FavoriteMovieService;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
 import com.udacity.filmesfamosos.utils.ApplicationUtils;
 

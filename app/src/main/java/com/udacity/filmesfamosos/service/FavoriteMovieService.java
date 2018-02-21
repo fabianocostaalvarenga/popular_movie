@@ -1,4 +1,4 @@
-package com.udacity.filmesfamosos.repository;
+package com.udacity.filmesfamosos.service;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.udacity.filmesfamosos.model.dto.MovieDTO;
+import com.udacity.filmesfamosos.repository.MoviesContract;
+import com.udacity.filmesfamosos.repository.MoviesDBHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -75,6 +77,7 @@ public class FavoriteMovieService {
         cv.put(MoviesContract.MoviesEntry.COLUMN_NAME_ORIGINAL_TITLE, String.valueOf(movieDTO.getOriginalTitle()));
         cv.put(MoviesContract.MoviesEntry.COLUMN_NAME_VOTE_AVERAGE, String.valueOf(movieDTO.getVoteAverage()));
         cv.put(MoviesContract.MoviesEntry.COLUMN_NAME_OVERVIEW, String.valueOf(movieDTO.getOverview()));
+
         return database.insert(MoviesContract.MoviesEntry.TABLE_NAME, null, cv) == 1;
     }
 
@@ -95,7 +98,6 @@ public class FavoriteMovieService {
                 null,
                 null
         );
-
         return popularMovieFactory(cursor);
     }
 

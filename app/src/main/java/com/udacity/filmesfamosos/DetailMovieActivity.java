@@ -23,7 +23,7 @@ import com.udacity.filmesfamosos.model.ReviewModel;
 import com.udacity.filmesfamosos.model.TrailerModel;
 import com.udacity.filmesfamosos.model.dto.DetailsResultTaskDTO;
 import com.udacity.filmesfamosos.model.dto.MovieDTO;
-import com.udacity.filmesfamosos.repository.FavoriteMovieService;
+import com.udacity.filmesfamosos.service.FavoriteMovieService;
 import com.udacity.filmesfamosos.service.TheMovieDBService;
 import com.udacity.filmesfamosos.tasks.AsyncTaskDelegate;
 import com.udacity.filmesfamosos.tasks.DetailsAsyncTaskExecutor;

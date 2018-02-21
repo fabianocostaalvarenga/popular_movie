@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.udacity.filmesfamosos.R;
+
 /**
  * Created by fabiano.alvarenga on 18/02/18.
  */
@@ -33,6 +35,7 @@ public class MovieContentProvider extends ContentProvider {
         return matcher;
     }
 
+    private String labelMethodUnimplemented;
     private SQLiteDatabase database;
     private MoviesDBHelper dbHelper;
 
@@ -40,6 +43,7 @@ public class MovieContentProvider extends ContentProvider {
     public boolean onCreate() {
         this.dbHelper = new MoviesDBHelper(getContext());
         this.database = dbHelper.getReadableDatabase();
+        this.labelMethodUnimplemented = getContext().getResources().getString(R.string.label_method_unimplemented);
         return true;
     }
 
@@ -93,23 +97,23 @@ public class MovieContentProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        throw new RuntimeException("Method GETTYPE not implemented!");
+        throw new RuntimeException(labelMethodUnimplemented);
     }
 
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        throw new RuntimeException("Method INSERT not implemented!");
+        throw new RuntimeException(labelMethodUnimplemented);
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        throw new RuntimeException("Method DELETE not implemented!");
+        throw new RuntimeException(labelMethodUnimplemented);
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        throw new RuntimeException("Method UPDATE not implemented!");
+        throw new RuntimeException(labelMethodUnimplemented);
     }
 
     @Override
